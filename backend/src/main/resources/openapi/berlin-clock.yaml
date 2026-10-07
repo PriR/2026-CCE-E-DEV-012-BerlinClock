@@ -1,0 +1,138 @@
+openapi: 3.0.3
+info:
+  title: Berlin Clock API
+  version: 1.0.0
+  description: |
+    Shows a time on the Berlin Clock (Mengenlehreuhr).
+
+    Every row of the clock is returned as text with one character per lamp:
+    `O` is off, `Y` is a lit yellow lamp and `R` is a lit red lamp.
+
+    This file is the contract: the Java interface and the response models
+    are generated from it at build time, and the controller implements them.
+servers:
+  - url: http://localhost:8080
+    description: Local development
+tags:
+  - name: berlin-clock
+    description: Read the Berlin Clock
+
+paths:
+  /api/berlin-clock:
+    get:
+      tags:
+        - berlin-clock
+      operationId: getBerlinClock
+      summary: Show a time on the Berlin Clock
+      description: |
+        Returns the lamps for the given time, or for the current server time
+        when `time` is omitted. `24:00:00` is accepted as the end of the day;
+        any other `24:mm:ss` time is rejected.
+      parameters:
+        - name: time
+          in: query
+          required: false
+          description: Time to show, as `HH:mm:ss`. Defaults to the current time.
+          schema:
+            type: string
+            pattern: '^\d{2}:\d{2}:\d{2}$'
+          example: '13:17:01'
+      responses:
+        '200':
+          description: The lamps that show the requested time
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BerlinClockResponse'
+              examples:
+                afternoon:
+                  summary: 13:17:01
+                  value:
+                    display:
+                      seconds: 'O'
+                      fiveHours: 'RROO'
+                      oneHours: 'RRRO'
+                      fiveMinutes: 'YYROOOOOOOO'
+                      oneMinutes: 'YYOO'
+        '400':
+          description: The time is malformed or out of range
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                malformed:
+                  summary: Not written as HH:mm:ss
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: time must use the HH:mm:ss format
+                outOfRange:
+                  summary: A part of the time is out of range
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: 'hours must be between 0 and 24: 25'
+
+components:
+  schemas:
+    BerlinClockResponse:
+      type: object
+      required:
+        - display
+      properties:
+        display:
+          $ref: '#/components/schemas/Display'
+
+    Display:
+      type: object
+      description: The lamps of each row, from the top row to the bottom row
+      required:
+        - seconds
+        - fiveHours
+        - oneHours
+        - fiveMinutes
+        - oneMinutes
+      properties:
+        seconds:
+          type: string
+          description: 1 yellow lamp, lit on even seconds
+          pattern: '^[OY]$'
+          example: 'O'
+        fiveHours:
+          type: string
+          description: 4 red lamps, one per 5 hours
+          pattern: '^[OR]{4}$'
+          example: 'RROO'
+        oneHours:
+          type: string
+          description: 4 red lamps, one per remaining hour
+          pattern: '^[OR]{4}$'
+          example: 'RRRO'
+        fiveMinutes:
+          type: string
+          description: 11 lamps, one per 5 minutes; every third lamp is red, the others yellow
+          pattern: '^[OYR]{11}$'
+          example: 'YYROOOOOOOO'
+        oneMinutes:
+          type: string
+          description: 4 yellow lamps, one per remaining minute
+          pattern: '^[OY]{4}$'
+          example: 'YYOO'
+
+    Problem:
+      type: object
+      description: Error details (RFC 7807 problem details)
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
