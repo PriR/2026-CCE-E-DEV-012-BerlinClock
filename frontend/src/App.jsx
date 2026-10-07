@@ -16,7 +16,7 @@ export default function App() {
       <h1>Berlin Clock</h1>
 
       {clock ? (
-        <ClockFace display={clock.display} />
+        <ClockFace clock={clock} />
       ) : (
         !error && <p>Loading…</p> // When loading for the first time
       )}
