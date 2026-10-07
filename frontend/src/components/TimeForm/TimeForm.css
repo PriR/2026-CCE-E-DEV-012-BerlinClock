@@ -1,0 +1,20 @@
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+}
+
+.controls input,
+.controls button {
+  padding: 6px 10px;
+  font-size: 1rem;
+}
