@@ -48,12 +48,11 @@ paths:
                 afternoon:
                   summary: 13:17:01
                   value:
-                    display:
-                      seconds: 'O'
-                      fiveHours: 'RROO'
-                      oneHours: 'RRRO'
-                      fiveMinutes: 'YYROOOOOOOO'
-                      oneMinutes: 'YYOO'
+                    seconds: 'O'
+                    fiveHours: 'RROO'
+                    oneHours: 'RRRO'
+                    fiveMinutes: 'YYROOOOOOOO'
+                    oneMinutes: 'YYOO'
         '400':
           description: The time is malformed or out of range
           content:
@@ -77,14 +76,6 @@ paths:
 components:
   schemas:
     BerlinClockResponse:
-      type: object
-      required:
-        - display
-      properties:
-        display:
-          $ref: '#/components/schemas/Display'
-
-    Display:
       type: object
       description: The lamps of each row, from the top row to the bottom row
       required:

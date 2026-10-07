@@ -40,13 +40,11 @@ API (contract first, see below):
 
 ```json
 {
-  "display": {
-    "seconds": "O",
-    "fiveHours": "RROO",
-    "oneHours": "RRRO",
-    "fiveMinutes": "YYROOOOOOOO",
-    "oneMinutes": "YYOO"
-  }
+  "seconds": "O",
+  "fiveHours": "RROO",
+  "oneHours": "RRRO",
+  "fiveMinutes": "YYROOOOOOOO",
+  "oneMinutes": "YYOO"
 }
 ```
 
@@ -56,7 +54,7 @@ The contract is `backend/src/main/resources/openapi/berlin-clock.yaml`. It is th
 
 - `mvn compile` (or any later Maven phase) runs the OpenAPI Generator in `generate-sources` and writes the `BerlinClockApi` interface to `backend/target/generated-sources/openapi`. It is not committed.
 - `BerlinClockController` implements the generated interface, so the path and the optional `time` parameter cannot drift from the contract.
-- The response is the handwritten `BerlinClockResponse` (own class, built from the domain `BerlinClockDisplay`). The contract's `BerlinClockResponse` and `Display` schemas are mapped to it with `schemaMappings` in the pom, so the generator does not create a second copy. Because Java does not check that class against the YAML, `BerlinClockControllerTest` compares the whole JSON strictly: a field added to or missing from the class fails it.
+- The response is the handwritten `BerlinClockResponse` (own class, built from the domain `BerlinClockDisplay`). The contract's `BerlinClockResponse` and is mapped to it with `schemaMappings` in the pom, so the generator does not create a second copy. Because Java does not check that class against the YAML, `BerlinClockControllerTest` compares the whole JSON strictly: a field added to or missing from the class fails it.
 - To change the API, edit the YAML first, then adapt the controller to whatever the compiler reports.
 - **Swagger UI:** with the backend running, open <http://localhost:8080/swagger-ui.html>. It renders the contract file itself, which is also served at <http://localhost:8080/berlin-clock.yaml>.
 
@@ -71,7 +69,7 @@ Layers depend inwards only: `api`, `infrastructure` -> `application` -> `domain`
 ```
 com.berlinclock
 ├── domain/            framework-free, no Spring
-│   ├── model/         value objects: TimeOfDay (validates, parses HH:mm:ss), Lamp, LampRow, BerlinClockDisplay (the lamps plus the time they show)
+│   ├── model/         value objects: TimeOfDay (validates, parses HH:mm:ss), Lamp, LampRow, BerlinClockDisplay (the lamps)
 │   ├── rule/          LampRule + one small rule per row (seconds, five/one hours, five/one minutes)
 │   └── service/       BerlinClock: asks each rule which lamps to light
 ├── application/       use case BerlinClockService (input port), CurrentTime (output port), BerlinClockServiceImpl

@@ -80,7 +80,6 @@
               <!-- the response class is handwritten (built from the domain): do not generate a second one -->
               <schemaMappings>
                 <schemaMapping>BerlinClockResponse=com.berlinclock.api.BerlinClockResponse</schemaMapping>
-                <schemaMapping>Display=com.berlinclock.api.BerlinClockResponse.Display</schemaMapping>
               </schemaMappings>
               <configOptions>
                 <!-- only the interface the controller implements, and the models -->
