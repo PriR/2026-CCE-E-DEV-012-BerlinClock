@@ -39,7 +39,6 @@ class BerlinClockServiceImplTest {
     void showsTheRequestedTime() {
         BerlinClockDisplay display = berlinClockService.at("23:59:59");
 
-        assertEquals(new TimeOfDay(23, 59, 59), display.time());
         assertEquals("O", display.seconds().asText());
         assertEquals("RRRR", display.fiveHours().asText());
         assertEquals("RRRO", display.oneHours().asText());
@@ -51,7 +50,6 @@ class BerlinClockServiceImplTest {
     void showsTheCurrentTimeFromTheCurrentTimePort() {
         BerlinClockDisplay display = berlinClockService.now();
 
-        assertEquals(new TimeOfDay(13, 17, 1), display.time());
         assertEquals("RROO", display.fiveHours().asText());
         assertEquals("RRRO", display.oneHours().asText());
         assertEquals("YYROOOOOOOO", display.fiveMinutes().asText());

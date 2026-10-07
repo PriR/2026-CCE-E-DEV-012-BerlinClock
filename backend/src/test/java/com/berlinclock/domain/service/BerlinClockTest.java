@@ -39,13 +39,6 @@ class BerlinClockTest {
     }
 
     @Test
-    void theDisplayKnowsWhichTimeItShows() {
-        TimeOfDay time = new TimeOfDay(13, 17, 1);
-
-        assertEquals(time, clock.display(time).time());
-    }
-
-    @Test
     void eachRowComesFromItsOwnRule() {
         BerlinClock clock = new BerlinClock(
                 rule(1), rule(2), rule(3), rule(4), rule(5));

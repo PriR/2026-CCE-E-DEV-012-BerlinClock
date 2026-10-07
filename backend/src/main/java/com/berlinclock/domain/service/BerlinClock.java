@@ -43,7 +43,6 @@ public final class BerlinClock {
 
     public BerlinClockDisplay display(TimeOfDay time) {
         return new BerlinClockDisplay(
-                time,
                 seconds.lampsAt(time),
                 fiveHours.lampsAt(time),
                 oneHours.lampsAt(time),
