@@ -9,7 +9,17 @@
 }
 
 /* dim colours when off, bright when lit */
-.lamp--red { background: #4a1f1f; }
-.lamp--yellow { background: #4a421f; }
-.lamp--red.lamp--lit { background: #e53935; box-shadow: 0 0 12px #e53935; }
-.lamp--yellow.lamp--lit { background: #fdd835; box-shadow: 0 0 12px #fdd835; }
+.lamp--red {
+  background: #4a1f1f;
+}
+.lamp--yellow {
+  background: #4a421f;
+}
+.lamp--red.lamp--lit {
+  background: #e53935;
+  box-shadow: 0 0 12px #e53935;
+}
+.lamp--yellow.lamp--lit {
+  background: #fdd835;
+  box-shadow: 0 0 12px #fdd835;
+}
