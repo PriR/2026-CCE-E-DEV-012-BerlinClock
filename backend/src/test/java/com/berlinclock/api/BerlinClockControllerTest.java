@@ -87,4 +87,22 @@ class BerlinClockControllerTest {
                         }
                         """, true));
     }
+
+    @Test
+    void rejectsAnInvalidTimeWithBadRequest() throws Exception {
+        mockMvc.perform(get("/api/berlin-clock").param("time", "25:00:00"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("""
+                        { "detail": "hours must be between 0 and 24: 25" }
+                        """));
+    }
+
+    @Test
+    void rejectsAMalformedTimeWithBadRequest() throws Exception {
+        mockMvc.perform(get("/api/berlin-clock").param("time", "noon"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("""
+                        { "detail": "time must use the HH:mm:ss format" }
+                        """));
+    }
 }
