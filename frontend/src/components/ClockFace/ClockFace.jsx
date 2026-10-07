@@ -1,5 +1,5 @@
 import { CLOCK_ROWS } from '../../config/clockRows.js';
-import LampRow from '../LampRow/LampRow.jsx';
+import LampRow from './LampRow.jsx';
 import './ClockFace.css';
 
 export default function ClockFace({ clock }) {
