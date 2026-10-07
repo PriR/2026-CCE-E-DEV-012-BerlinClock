@@ -9,7 +9,7 @@ export const CLOCK_ROWS = [
     label: 'Five minutes',
     variant: 'five-minutes',
     // every third lamp marks a quarter of an hour
-    colorAt: (index) => ((index + 1) % 3 === 0 ? 'red' : 'yellow'),
+    colorAt: (index) => ((index + 1) % 3 === 0 ? 'red' : 'yellow'), // follows same rule as backend
   },
   { key: 'oneMinutes', label: 'One minutes', variant: 'minutes', colorAt: () => 'yellow' },
 ];

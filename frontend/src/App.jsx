@@ -6,7 +6,8 @@ import useBerlinClock from './hooks/useBerlinClock.js';
 import './App.css';
 
 export default function App() {
-  // undefined = follow the backend's current time; a string = a fixed HH:mm:ss chosen by the user
+  // undefined = follow the backend's current time; OR
+  // a string = a fixed HH:mm:ss chosen by the user
   const [fixedTime, setFixedTime] = useState(undefined);
   const { clock, error } = useBerlinClock(fixedTime);
 
@@ -14,7 +15,11 @@ export default function App() {
     <main className="app">
       <h1>Berlin Clock</h1>
 
-      {clock ? <ClockFace display={clock.display} /> : !error && <p>Loading…</p>}
+      {clock ? (
+        <ClockFace display={clock.display} />
+      ) : (
+        !error && <p>Loading…</p> // When loading for the first time
+      )}
 
       <ErrorMessage message={error} />
 
