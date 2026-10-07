@@ -4,29 +4,3 @@
   align-items: center;
   gap: 10px;
 }
-
-.clock-row {
-  display: flex;
-  gap: 6px;
-}
-
-.lamp {
-  display: inline-block;
-  border-radius: 6px;
-  border: 2px solid #1b1b1b;
-  background: #2a2a2a;
-  transition: background 0.2s, box-shadow 0.2s;
-}
-
-/* lamp sizes per row */
-.clock-row--seconds .lamp { width: 64px; height: 64px; border-radius: 50%; }
-.clock-row--hours .lamp { width: 64px; height: 38px; }
-.clock-row--five-minutes .lamp { width: 20px; height: 38px; }
-.clock-row--minutes .lamp { width: 64px; height: 38px; }
-.clock-row--five-minutes { gap: 4px; }
-
-/* dim colours when off, bright when lit */
-.lamp--red { background: #4a1f1f; }
-.lamp--yellow { background: #4a421f; }
-.lamp--red.lamp--lit { background: #e53935; box-shadow: 0 0 12px #e53935; }
-.lamp--yellow.lamp--lit { background: #fdd835; box-shadow: 0 0 12px #fdd835; }

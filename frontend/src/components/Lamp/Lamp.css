@@ -1,0 +1,15 @@
+.lamp {
+  display: inline-block;
+  width: var(--lamp-width);
+  height: var(--lamp-height);
+  border-radius: var(--lamp-radius, 6px);
+  border: 2px solid #1b1b1b;
+  background: #2a2a2a;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+/* dim colours when off, bright when lit */
+.lamp--red { background: #4a1f1f; }
+.lamp--yellow { background: #4a421f; }
+.lamp--red.lamp--lit { background: #e53935; box-shadow: 0 0 12px #e53935; }
+.lamp--yellow.lamp--lit { background: #fdd835; box-shadow: 0 0 12px #fdd835; }
