@@ -22,7 +22,7 @@ const lampsOf = (rowName) =>
 
 describe('ClockFace', () => {
   it('renders the five rows with 1, 4, 4, 11 and 4 lamps', () => {
-    render(<ClockFace display={midnight} />);
+    render(<ClockFace clock={midnight} />);
 
     expect(lampsOf('Seconds')).toHaveLength(1);
     expect(lampsOf('Five hours')).toHaveLength(4);
@@ -32,15 +32,15 @@ describe('ClockFace', () => {
   });
 
   it('lights the seconds lamp when it is on and leaves it dark when it is off', () => {
-    const { rerender } = render(<ClockFace display={midnight} />);
+    const { rerender } = render(<ClockFace clock={midnight} />);
     expect(lampsOf('Seconds')[0]).toHaveAttribute('data-lit', 'true');
 
-    rerender(<ClockFace display={endOfDay} />);
+    rerender(<ClockFace clock={endOfDay} />);
     expect(lampsOf('Seconds')[0]).toHaveAttribute('data-lit', 'false');
   });
 
   it('lights lamps according to the display strings', () => {
-    render(<ClockFace display={endOfDay} />);
+    render(<ClockFace clock={endOfDay} />);
 
     expect(lampsOf('Five hours').map((l) => l.dataset.lit)).toEqual(['true', 'true', 'true', 'true']);
     expect(lampsOf('One hours').map((l) => l.dataset.lit)).toEqual(['true', 'true', 'true', 'false']);
@@ -48,7 +48,7 @@ describe('ClockFace', () => {
   });
 
   it('colours hour lamps red and the seconds and one-minute lamps yellow', () => {
-    render(<ClockFace display={endOfDay} />);
+    render(<ClockFace clock={endOfDay} />);
 
     lampsOf('Five hours').forEach((l) => expect(l).toHaveAttribute('data-color', 'red'));
     lampsOf('One hours').forEach((l) => expect(l).toHaveAttribute('data-color', 'red'));
@@ -57,7 +57,7 @@ describe('ClockFace', () => {
   });
 
   it('makes every third five-minute lamp red, lit or not', () => {
-    render(<ClockFace display={midnight} />);
+    render(<ClockFace clock={midnight} />);
 
     const colours = lampsOf('Five minutes').map((l) => l.dataset.color);
     expect(colours).toEqual([

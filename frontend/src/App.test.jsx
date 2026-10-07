@@ -6,11 +6,19 @@ import { fetchClock } from './api/clockApi.js';
 vi.mock('./api/clockApi.js');
 
 const liveResponse = {
-  display: { seconds: 'O', fiveHours: 'RROO', oneHours: 'RRRO', fiveMinutes: 'YYROOOOOOOO', oneMinutes: 'YYOO' },
+  seconds: 'O',
+  fiveHours: 'RROO',
+  oneHours: 'RRRO',
+  fiveMinutes: 'YYROOOOOOOO',
+  oneMinutes: 'YYOO',
 };
 
 const endOfDayResponse = {
-  display: { seconds: 'Y', fiveHours: 'RRRR', oneHours: 'RRRR', fiveMinutes: 'OOOOOOOOOOO', oneMinutes: 'OOOO' },
+  seconds: 'Y',
+  fiveHours: 'RRRR',
+  oneHours: 'RRRR',
+  fiveMinutes: 'OOOOOOOOOOO',
+  oneMinutes: 'OOOO',
 };
 
 // let pending promises (the mocked fetch) settle inside act()
@@ -64,7 +72,9 @@ describe('App', () => {
     await flush();
     fetchClock.mockResolvedValue(endOfDayResponse);
 
-    fireEvent.change(screen.getByLabelText(/custom time/i), { target: { value: '24:00:00' } });
+    fireEvent.change(screen.getByLabelText(/custom time/i), {
+      target: { value: '24:00:00' },
+    });
     fireEvent.click(screen.getByRole('button', { name: /show time/i }));
     await flush();
 
@@ -82,19 +92,27 @@ describe('App', () => {
     expect(secondsLamp()).toHaveAttribute('data-lit', 'false');
 
     await tick(1000);
-    expect(fetchClock.mock.calls.length).toBeGreaterThan(callsAfterCustomTime + 1);
+    expect(fetchClock.mock.calls.length).toBeGreaterThan(
+      callsAfterCustomTime + 1,
+    );
   });
 
   it('shows the backend error and keeps the previous lamps when the time is invalid', async () => {
     render(<App />);
     await flush();
-    fetchClock.mockRejectedValue(new Error('hours must be between 0 and 24: 25'));
+    fetchClock.mockRejectedValue(
+      new Error('hours must be between 0 and 24: 25'),
+    );
 
-    fireEvent.change(screen.getByLabelText(/custom time/i), { target: { value: '25:00:00' } });
+    fireEvent.change(screen.getByLabelText(/custom time/i), {
+      target: { value: '25:00:00' },
+    });
     fireEvent.click(screen.getByRole('button', { name: /show time/i }));
     await flush();
 
-    expect(screen.getByRole('alert')).toHaveTextContent('hours must be between 0 and 24: 25');
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'hours must be between 0 and 24: 25',
+    );
     expect(screen.getAllByTestId('lamp')).toHaveLength(24);
   });
 });

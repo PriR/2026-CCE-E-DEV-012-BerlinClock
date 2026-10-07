@@ -5,7 +5,7 @@ import useBerlinClock from './useBerlinClock.js';
 
 vi.mock('../api/clockApi.js');
 
-const reading = { display: { seconds: 'O' } };
+const reading = { seconds: 'O' };
 
 const flush = () => act(async () => {});
 const tick = (ms) => act(async () => vi.advanceTimersByTime(ms));

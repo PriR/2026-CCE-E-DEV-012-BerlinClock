@@ -1,9 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fetchClock } from './clockApi.js';
 
-const sample = {
-  display: { seconds: 'O', fiveHours: 'RROO', oneHours: 'RRRO', fiveMinutes: 'YYROOOOOOOO', oneMinutes: 'YYOO' },
-};
+const sample = { seconds: 'O', fiveHours: 'RROO', oneHours: 'RRRO', fiveMinutes: 'YYROOOOOOOO', oneMinutes: 'YYOO' };
 
 function mockFetch(response) {
   const fetchMock = vi.fn().mockResolvedValue(response);
