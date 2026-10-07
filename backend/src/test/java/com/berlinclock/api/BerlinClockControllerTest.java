@@ -42,16 +42,14 @@ class BerlinClockControllerTest {
         mockMvc.perform(get("/api/berlin-clock").param("time", "23:59:59"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                        {
-                          "display": {
-                            "seconds": "O",
-                            "fiveHours": "RRRR",
-                            "oneHours": "RRRO",
-                            "fiveMinutes": "YYRYYRYYRYY",
-                            "oneMinutes": "YYYY"
-                          }
-                        }
-                        """, true));
+                                                  {
+                                                      "seconds": "O",
+                                                      "fiveHours": "RRRR",
+                                                      "oneHours": "RRRO",
+                                                      "fiveMinutes": "YYRYYRYYRYY",
+                                                      "oneMinutes": "YYYY"
+                                                  }
+                                                  """, true));
     }
 
     @Test
@@ -59,16 +57,14 @@ class BerlinClockControllerTest {
         mockMvc.perform(get("/api/berlin-clock").param("time", "24:00:00"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                        {
-                          "display": {
-                            "seconds": "Y",
-                            "fiveHours": "RRRR",
-                            "oneHours": "RRRR",
-                            "fiveMinutes": "OOOOOOOOOOO",
-                            "oneMinutes": "OOOO"
-                          }
-                        }
-                        """, true));
+                                                  {
+                                                      "seconds": "Y",
+                                                      "fiveHours": "RRRR",
+                                                      "oneHours": "RRRR",
+                                                      "fiveMinutes": "OOOOOOOOOOO",
+                                                      "oneMinutes": "OOOO"
+                                                  }
+                                                  """, true));
     }
 
     @Test
@@ -76,16 +72,14 @@ class BerlinClockControllerTest {
         mockMvc.perform(get("/api/berlin-clock"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                        {
-                          "display": {
-                            "seconds": "O",
-                            "fiveHours": "RROO",
-                            "oneHours": "RRRO",
-                            "fiveMinutes": "YYROOOOOOOO",
-                            "oneMinutes": "YYOO"
-                          }
-                        }
-                        """, true));
+                                                  {
+                                                      "seconds": "O",
+                                                      "fiveHours": "RROO",
+                                                      "oneHours": "RRRO",
+                                                      "fiveMinutes": "YYROOOOOOOO",
+                                                      "oneMinutes": "YYOO"
+                                                  }
+                                                  """, true));
     }
 
     @Test
@@ -93,8 +87,8 @@ class BerlinClockControllerTest {
         mockMvc.perform(get("/api/berlin-clock").param("time", "25:00:00"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("""
-                        { "detail": "hours must be between 0 and 24: 25" }
-                        """));
+                                                  { "detail": "hours must be between 0 and 24: 25" }
+                                                  """));
     }
 
     @Test
@@ -102,7 +96,7 @@ class BerlinClockControllerTest {
         mockMvc.perform(get("/api/berlin-clock").param("time", "noon"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("""
-                        { "detail": "time must use the HH:mm:ss format" }
-                        """));
+                                                  { "detail": "time must use the HH:mm:ss format" }
+                                                  """));
     }
 }
