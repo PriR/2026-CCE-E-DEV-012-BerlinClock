@@ -57,7 +57,7 @@
   <build>
     <plugins>
       <plugin>
-        <!-- contract first: src/main/resources/openapi/berlin-clock.yaml -> generated API interface -->
+        <!-- contract first: src/main/resources/openapi/berlin-clock.yaml -> generated API interface and BerlinClockResponse -->
         <groupId>org.openapitools</groupId>
         <artifactId>openapi-generator-maven-plugin</artifactId>
         <version>7.26.0</version>
@@ -72,22 +72,19 @@
               <generatorName>spring</generatorName>
               <apiPackage>com.berlinclock.api.generated</apiPackage>
               <modelPackage>com.berlinclock.api.generated.model</modelPackage>
-              <!-- the response class is handwritten (built from the domain): do not generate a second one -->
+              <generateSupportingFiles>false</generateSupportingFiles>
+              <!-- Problem is Spring's own ProblemDetail (what ApiExceptionHandler returns), so no model is generated for it -->
               <schemaMappings>
-                <schemaMapping>BerlinClockResponse=com.berlinclock.api.BerlinClockResponse</schemaMapping>
+                <schemaMapping>Problem=org.springframework.http.ProblemDetail</schemaMapping>
               </schemaMappings>
               <configOptions>
-                <!-- only the interface the controller implements, and the models -->
                 <interfaceOnly>true</interfaceOnly>
                 <skipDefaultInterface>true</skipDefaultInterface>
                 <useResponseEntity>false</useResponseEntity>
                 <useTags>true</useTags>
-                <!-- keep the generated code free of extra dependencies and behaviour -->
-                <documentationProvider>none</documentationProvider>
-                <annotationLibrary>none</annotationLibrary>
-                <openApiNullable>false</openApiNullable>
-                <!-- patterns stay documentation: TimeOfDay validates and reports its own errors -->
                 <useBeanValidation>false</useBeanValidation>
+                <documentationProvider>none</documentationProvider>
+                <openApiNullable>false</openApiNullable>
               </configOptions>
             </configuration>
           </execution>

@@ -1,17 +1,13 @@
 package com.berlinclock.api;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import com.berlinclock.api.generated.model.BerlinClockResponse;
 import com.berlinclock.domain.model.TimeOfDay;
 import com.berlinclock.domain.service.BerlinClock;
-
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 
-class BerlinClockResponseTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class BerlinClockResponseMapperTest {
 
     private final BerlinClock clock = BerlinClock.standard();
 
@@ -19,14 +15,22 @@ class BerlinClockResponseTest {
     void carriesOneTextPerRow() {
         BerlinClockResponse response = responseFor(new TimeOfDay(23, 59, 59));
 
-        assertEquals(new BerlinClockResponse("O", "RRRR", "RRRO", "YYRYYRYYRYY", "YYYY"), response);
+        assertEquals("O", response.getSeconds());
+        assertEquals("RRRR", response.getFiveHours());
+        assertEquals("RRRO", response.getOneHours());
+        assertEquals("YYRYYRYYRYY", response.getFiveMinutes());
+        assertEquals("YYYY", response.getOneMinutes());
     }
 
     @Test
     void showsTheEndOfTheDay() {
         BerlinClockResponse response = responseFor(new TimeOfDay(24, 0, 0));
 
-        assertEquals(new BerlinClockResponse("Y", "RRRR", "RRRR", "OOOOOOOOOOO", "OOOO"), response);
+        assertEquals("Y", response.getSeconds());
+        assertEquals("RRRR", response.getFiveHours());
+        assertEquals("RRRR", response.getOneHours());
+        assertEquals("OOOOOOOOOOO", response.getFiveMinutes());
+        assertEquals("OOOO", response.getOneMinutes());
     }
 
     private BerlinClockResponse responseFor(TimeOfDay time) {

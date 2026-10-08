@@ -1,6 +1,7 @@
 package com.berlinclock.api;
 
 import com.berlinclock.api.generated.BerlinClockApi;
+import com.berlinclock.api.generated.model.BerlinClockResponse;
 import com.berlinclock.application.BerlinClockService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,6 @@ public class BerlinClockController implements BerlinClockApi {
     @Override
     public BerlinClockResponse getBerlinClock(String time) {
         var berlinClock = time == null ? berlinClockService.now() : berlinClockService.at(time);
-        return new BerlinClockResponse(berlinClock);
+        return BerlinClockResponseMapper.toResponse(berlinClock);
     }
 }
