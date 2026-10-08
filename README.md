@@ -20,7 +20,7 @@ Example, `23:59:59` -> `O` / `RRRR` / `RRRO` / `YYRYYRYYRYY` / `YYYY`.
 
 - JDK 21+
 - Maven 3.9+
-- Node.js 20+ and npm
+- Node.js 22.22+ (or 24.15+) and npm. The tests use jsdom 30, which does not run on older Node versions, including Node 20.
 
 The backend uses Lombok. Maven handles it automatically; in IntelliJ IDEA enable *Settings > Build, Execution, Deployment > Compiler > Annotation Processors > Enable annotation processing* (and install the Lombok plugin if your IDE version doesn't bundle it).
 
@@ -28,7 +28,7 @@ The backend uses Lombok. Maven handles it automatically; in IntelliJ IDEA enable
 
 ```bash
 cd backend
-mvn test             # domain unit tests + Spring tests (use case, REST layer)
+mvn test             # domain unit tests + Spring tests (use case, REST layer, Swagger UI)
 mvn spring-boot:run  # starts on http://localhost:8080
 ```
 
@@ -54,7 +54,7 @@ The contract is `backend/src/main/resources/openapi/berlin-clock.yaml`. It is th
 
 - `mvn compile` (or any later Maven phase) runs the OpenAPI Generator in `generate-sources` and writes the `BerlinClockApi` interface to `backend/target/generated-sources/openapi`. It is not committed.
 - `BerlinClockController` implements the generated interface, so the path and the optional `time` parameter cannot drift from the contract.
-- The response is the handwritten `BerlinClockResponse` (own class, built from the domain `BerlinClockDisplay`). The contract's `BerlinClockResponse` and is mapped to it with `schemaMappings` in the pom, so the generator does not create a second copy. Because Java does not check that class against the YAML, `BerlinClockControllerTest` compares the whole JSON strictly: a field added to or missing from the class fails it.
+- The response is the handwritten `BerlinClockResponse` (own class, built from the domain `BerlinClockDisplay`). The contract's `BerlinClockResponse` and `Display` schemas are mapped to it with `schemaMappings` in the pom, so the generator does not create a second copy. Because Java does not check that class against the YAML, `BerlinClockControllerTest` compares the whole JSON strictly: a field added to or missing from the class fails it.
 - To change the API, edit the YAML first, then adapt the controller to whatever the compiler reports.
 - **Swagger UI:** with the backend running, open <http://localhost:8080/swagger-ui.html>. It renders the contract file itself, which is also served at <http://localhost:8080/berlin-clock.yaml>.
 
@@ -69,13 +69,12 @@ Layers depend inwards only: `api`, `infrastructure` -> `application` -> `domain`
 ```
 com.berlinclock
 ├── domain/            framework-free, no Spring
-│   ├── model/         value objects: TimeOfDay (validates, parses HH:mm:ss), Lamp, LampRow, BerlinClockDisplay (the lamps)
+│   ├── model/         value objects: TimeOfDay (validates, parses HH:mm:ss), Lamp, LampRow, BerlinClockDisplay (the lamps plus the time they show)
 │   ├── rule/          LampRule + one small rule per row (seconds, five/one hours, five/one minutes)
 │   └── service/       BerlinClock: asks each rule which lamps to light
 ├── application/       use case BerlinClockService (input port), CurrentTime (output port), BerlinClockServiceImpl
 ├── infrastructure/    SystemCurrentTime: adapter that implements CurrentTime with a java.time.Clock
-├── api/               BerlinClockController (implements the generated BerlinClockApi), ApiExceptionHandler (400 problem details)
-├── api/BerlinClockResponse   the JSON response, built from a BerlinClockDisplay
+├── api/               BerlinClockController (implements the generated BerlinClockApi), BerlinClockResponse (the JSON, built from a BerlinClockDisplay), ApiExceptionHandler (400 problem details)
 │   └── generated/     (build output) API interface generated from the OpenAPI contract
 └── config/            Spring wiring: Clock bean, BerlinClock bean
 ```
@@ -105,14 +104,17 @@ src/
 ├── main.jsx
 ├── api/clockApi.js           HTTP call and error mapping
 ├── hooks/useBerlinClock.js   loading, 1 s polling and errors
-├── config/clockRows.js       row definitions (label, lamp colours)
+├── config/clockRows.js       row definitions (label, layout variant, lamp colours)
 └── components/               one folder per component, with its CSS and test next to it
-    ├── ClockFace/            composes the rows
-    ├── LampRow/              one row of lamps; its variant sets the lamp size (CSS variables)
-    ├── Lamp/
+    ├── ClockFace/            draws the clock; its parts LampRow and Lamp live in the same folder
+    │   ├── ClockFace.jsx   ClockFace.css   ClockFace.test.jsx
+    │   ├── LampRow.jsx     LampRow.css     one row of lamps; its variant sets the lamp size (CSS variables)
+    │   └── Lamp.jsx        Lamp.css        one lamp
     ├── TimeForm/             custom time input and "Live" button
     └── ErrorMessage/         shows an error as an alert
 ```
+
+`LampRow` and `Lamp` are only used by `ClockFace`, so they sit in its folder. A component that is used in several places gets a folder of its own.
 
 ## How it was built (TDD)
 
@@ -122,7 +124,8 @@ The git history is the story. The steps are in dependency order, from the inside
 2. **Domain, plain Java without Spring:** `Lamp` and `LampRow`, `TimeOfDay` (an invalid time cannot be constructed), one `LampRule` per row (seconds, five/one hours, five/one minutes), and `BerlinClock` which composes them.
 3. **Application:** the `BerlinClockService` use case with the `CurrentTime` port, the `SystemCurrentTime` adapter, and the Spring wiring.
 4. **API, contract first:** the OpenAPI contract, `BerlinClockResponse`, the generated interface, the controller, 400 problem details, and Swagger UI.
-5. **Frontend, test-first:** the API client, `ClockFace` (then split into `LampRow` and `Lamp`, each owning its CSS), `TimeForm`, `useBerlinClock`, `ErrorMessage` and `App`. Every component lives in its own folder with its CSS and test.
-6. **Docs:** this README, with how to build, run and test everything.
+5. **Frontend, test-first:** the API client, `ClockFace` (then split into `LampRow` and `Lamp`, each owning its CSS), `TimeForm`, `useBerlinClock`, `ErrorMessage` and `App`. Every component has its CSS and test next to it.
+6. **Tidy-up:** `LampRow` and `Lamp` moved into `ClockFace`'s folder, because only `ClockFace` uses them (a pure refactor, the tests unchanged).
+7. **Docs:** this README, with how to build, run and test everything.
 
 Domain value objects and rules are plain Java and are tested without Spring. The use case, adapter wiring and REST layer are tested with Spring's test support (`@SpringBootTest`, `@WebMvcTest`, `MockMvc`), which runs on the JUnit Platform underneath.
