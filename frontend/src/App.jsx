@@ -11,16 +11,18 @@ export default function App() {
   const [fixedTime, setFixedTime] = useState(undefined);
   const { clock, error } = useBerlinClock(fixedTime);
 
+  let clockDisplay;
+  if (clock) {
+    clockDisplay = <ClockFace clock={clock} />;
+  } else {
+    clockDisplay = !error && <p>Loading…</p>; // When loading for the first time
+  }
+
   return (
     <main className="app">
       <h1>Berlin Clock</h1>
 
-      {clock ? (
-        <ClockFace clock={clock} />
-      ) : (
-        !error && <p>Loading…</p> // When loading for the first time
-      )}
-
+      {clockDisplay}
       <ErrorMessage message={error} />
 
       <TimeForm
