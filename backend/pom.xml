@@ -72,11 +72,6 @@
               <generatorName>spring</generatorName>
               <apiPackage>com.berlinclock.api.generated</apiPackage>
               <modelPackage>com.berlinclock.api.generated.model</modelPackage>
-              <generateSupportingFiles>false</generateSupportingFiles>
-              <generateApiTests>false</generateApiTests>
-              <generateModelTests>false</generateModelTests>
-              <generateApiDocumentation>false</generateApiDocumentation>
-              <generateModelDocumentation>false</generateModelDocumentation>
               <!-- the response class is handwritten (built from the domain): do not generate a second one -->
               <schemaMappings>
                 <schemaMapping>BerlinClockResponse=com.berlinclock.api.BerlinClockResponse</schemaMapping>
@@ -87,17 +82,12 @@
                 <skipDefaultInterface>true</skipDefaultInterface>
                 <useResponseEntity>false</useResponseEntity>
                 <useTags>true</useTags>
-                <useSpringBoot4>true</useSpringBoot4>
-                <useJackson3>true</useJackson3>
                 <!-- keep the generated code free of extra dependencies and behaviour -->
                 <documentationProvider>none</documentationProvider>
                 <annotationLibrary>none</annotationLibrary>
                 <openApiNullable>false</openApiNullable>
                 <!-- patterns stay documentation: TimeOfDay validates and reports its own errors -->
                 <useBeanValidation>false</useBeanValidation>
-                <generateJsonIncludeAnnotations>false</generateJsonIncludeAnnotations>
-                <generateJsonSetterNullsAnnotations>false</generateJsonSetterNullsAnnotations>
-                <hideGenerationTimestamp>true</hideGenerationTimestamp>
               </configOptions>
             </configuration>
           </execution>
